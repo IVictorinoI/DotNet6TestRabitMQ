@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  test_rabit_mq:
+    container_name: test_rabit_mq
+    build: . # Chamada do DockerFile
+    restart: always
+    ports:
+      - 3600:80
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+      - env_local
+    depends_on:
+      - rabitmq
+
+  rabitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_test
+    restart: always
+    ports:
+      - 15672:15672
+      - 5672:5672
+    expose:
+     - 5672
+     - 15672
+    networks:
+      - env_local
+
+networks:
+  env_local:
+    driver: bridge
+    
