@@ -1,7 +1,9 @@
+using DotNet6TestRabitMQ.Api.RabbitMQConsumer;
 using DotNet6TestRabitMQ.Api.RabbitMQSender;
 using DotNet6TestRabitMQ.Application;
 using DotNet6TestRabitMQ.Domain;
 using DotNet6TestRabitMQ.Repository;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,10 +14,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IRepPerson, RepPerson>();
-builder.Services.AddScoped<IPersonService, PersonService>();
-builder.Services.AddScoped<IPersonApplication, PersonApplication>();
+builder.Services.AddSingleton<IRepPerson, RepPerson>();
+builder.Services.AddSingleton<IPersonService, PersonService>();
 builder.Services.AddSingleton<IRabbitMqMessageSender, RabbitMqMessageSender>();
+builder.Services.AddSingleton<IPersonApplication, PersonApplication>();
+builder.Services.AddHostedService<RabbitMqMessageConsumer>();
 
 var app = builder.Build();
 
